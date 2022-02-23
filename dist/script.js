@@ -1562,11 +1562,89 @@ module.exports = g;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_slider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/slider */ "./src/js/modules/slider.js");
+/* harmony import */ var _modules_playVideo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/playVideo */ "./src/js/modules/playVideo.js");
+
 
 window.addEventListener("DOMContentLoaded", function () {
   var slider = new _modules_slider__WEBPACK_IMPORTED_MODULE_0__["default"](".page", ".next");
   slider.render();
+  var player1 = new _modules_playVideo__WEBPACK_IMPORTED_MODULE_1__["default"](".showup .play", ".overlay");
+  player1.init();
 });
+
+/***/ }),
+
+/***/ "./src/js/modules/playVideo.js":
+/*!*************************************!*\
+  !*** ./src/js/modules/playVideo.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return VideoPlayer; });
+/* harmony import */ var core_js_modules_es_array_for_each__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.for-each */ "./node_modules/core-js/modules/es.array.for-each.js");
+/* harmony import */ var core_js_modules_es_array_for_each__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_for_each__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es_object_define_property__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.object.define-property */ "./node_modules/core-js/modules/es.object.define-property.js");
+/* harmony import */ var core_js_modules_es_object_define_property__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_define_property__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
+/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var VideoPlayer =
+/*#__PURE__*/
+function () {
+  function VideoPlayer(triggers, overlay) {
+    _classCallCheck(this, VideoPlayer);
+
+    this.btns = document.querySelectorAll(triggers);
+    this.overlay = document.querySelector(overlay); //this.close = overlay.querySelector(".close");
+  }
+
+  _createClass(VideoPlayer, [{
+    key: "createPlayer",
+    value: function createPlayer(url) {
+      this.player = new YT.Player('frame', {
+        height: '100%',
+        width: '100%',
+        videoId: "".concat(url)
+      });
+      console.log(this.player);
+      this.overlay.style.display = "flex";
+    }
+  }, {
+    key: "init",
+    value: function init() {
+      var _this = this;
+
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); // создание и подключение ассинхронного скрипта в начало страницы
+
+      this.btns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var path = btn.getAttribute("data-url");
+
+          _this.createPlayer(path);
+        });
+      });
+    }
+  }]);
+
+  return VideoPlayer;
+}();
+
+
 
 /***/ }),
 
@@ -1605,12 +1683,14 @@ function () {
     this.page = document.querySelector(page);
     this.slides = this.page.children;
     this.btns = document.querySelectorAll(btns);
-    this.slideIndex = 1;
+    this.slideIndex = 1; //this.visitCard = document.querySelector(".hanson");
   }
 
   _createClass(Slider, [{
     key: "showSlide",
     value: function showSlide(n) {
+      var _this = this;
+
       if (n > this.slides.length) {
         this.slideIndex = 1;
       }
@@ -1618,6 +1698,19 @@ function () {
       if (n < 1) {
         this.slideIndex = this.slider.length;
       }
+
+      try {
+        this.visitCard.style.display = "none";
+        this.visitCard.classList.add("animated", "slideInUp");
+
+        if (n == 3) {
+          setTimeout(function () {
+            _this.visitCard.style.display = "block";
+          }, 3000);
+        } else {
+          this.visitCard.classList.remove("slideInUp");
+        }
+      } catch (e) {}
 
       this.slides.forEach(function (slider) {
         slider.style.display = "none";
@@ -1634,17 +1727,21 @@ function () {
   }, {
     key: "render",
     value: function render() {
-      var _this = this;
+      var _this2 = this;
+
+      try {
+        this.visitCard = document.querySelector(".hanson");
+      } catch (e) {}
 
       this.btns.forEach(function (btn) {
         btn.addEventListener("click", function () {
-          _this.plusSlides(1);
+          _this2.plusSlides(1);
         });
         btn.parentNode.previousElementSibling.addEventListener("click", function (e) {
           e.preventDefault();
-          _this.slideIndex = 1;
+          _this2.slideIndex = 1;
 
-          _this.showSlide(_this.slideIndex);
+          _this2.showSlide(_this2.slideIndex);
         }); // document.querySelector('[href="#"]').addEventListener("click", (e) => {
         //     e.preventDefault();
         //     this.slideIndex = 1;
