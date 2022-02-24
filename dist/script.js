@@ -1607,10 +1607,40 @@ function () {
     _classCallCheck(this, VideoPlayer);
 
     this.btns = document.querySelectorAll(triggers);
-    this.overlay = document.querySelector(overlay); //this.close = overlay.querySelector(".close");
+    this.overlay = document.querySelector(overlay);
+    this.close = this.overlay.querySelector(".close"); //console.log(this.btns);
   }
 
   _createClass(VideoPlayer, [{
+    key: "bindTriggers",
+    value: function bindTriggers() {
+      var _this = this;
+
+      this.btns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (document.querySelector("iframe#frame")) {
+            _this.overlay.style.display = "flex";
+          } else {
+            _this.overlay.style.display = "flex";
+            var path = btn.getAttribute("data-url");
+
+            _this.createPlayer(path);
+          }
+        });
+      });
+    }
+  }, {
+    key: "bindCloseBtn",
+    value: function bindCloseBtn() {
+      var _this2 = this;
+
+      this.close.addEventListener("click", function () {
+        _this2.overlay.style.display = "none";
+
+        _this2.player.stopVideo();
+      });
+    }
+  }, {
     key: "createPlayer",
     value: function createPlayer(url) {
       this.player = new YT.Player('frame', {
@@ -1619,25 +1649,17 @@ function () {
         videoId: "".concat(url)
       });
       console.log(this.player);
-      this.overlay.style.display = "flex";
     }
   }, {
     key: "init",
     value: function init() {
-      var _this = this;
-
       var tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); // создание и подключение ассинхронного скрипта в начало страницы
 
-      this.btns.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          var path = btn.getAttribute("data-url");
-
-          _this.createPlayer(path);
-        });
-      });
+      this.bindTriggers();
+      this.bindCloseBtn();
     }
   }]);
 
@@ -1742,11 +1764,7 @@ function () {
           _this2.slideIndex = 1;
 
           _this2.showSlide(_this2.slideIndex);
-        }); // document.querySelector('[href="#"]').addEventListener("click", (e) => {
-        //     e.preventDefault();
-        //     this.slideIndex = 1;
-        //     this.showSlide(this.slideIndex);
-        // });
+        });
       });
       this.showSlide(this.slideIndex);
     }

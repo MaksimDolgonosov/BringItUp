@@ -54,11 +54,7 @@ export default class Slider {
                 this.showSlide(this.slideIndex);
             });
 
-            // document.querySelector('[href="#"]').addEventListener("click", (e) => {
-            //     e.preventDefault();
-            //     this.slideIndex = 1;
-            //     this.showSlide(this.slideIndex);
-            // });
+
 
         });
         this.showSlide(this.slideIndex);
