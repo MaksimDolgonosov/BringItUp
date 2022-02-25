@@ -1,10 +1,7 @@
-export default class Slider {
+import Slider from "./slider";
+export default class MainSlider extends Slider {
     constructor(page, btns) {
-        this.page = document.querySelector(page);
-        this.slides = this.page.children;
-        this.btns = document.querySelectorAll(btns);
-        this.slideIndex = 1;
-        //this.visitCard = document.querySelector(".hanson");
+        super(page, btns);
 
     }
     showSlide(n) {
@@ -12,7 +9,7 @@ export default class Slider {
             this.slideIndex = 1;
         }
         if (n < 1) {
-            this.slideIndex = this.slider.length;
+            this.slideIndex = this.slides.length;
         }
         try {
             this.visitCard.style.display = "none";
@@ -60,5 +57,4 @@ export default class Slider {
         this.showSlide(this.slideIndex);
 
     }
-
 }
