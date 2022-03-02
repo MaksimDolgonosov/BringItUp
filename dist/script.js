@@ -3064,9 +3064,21 @@ function (_Slider) {
       var _this2 = this;
 
       this.next.addEventListener("click", function () {
-        _this2.page.append(_this2.slides[0]);
+        if (_this2.slides[1].tagName == "BUTTON" && _this2.slides[2].tagName == "BUTTON") {
+          _this2.page.append(_this2.slides[0]);
 
-        _this2.decorizeSlides();
+          _this2.page.append(_this2.slides[0]);
+
+          _this2.decorizeSlides();
+        } else if (_this2.slides[1].tagName == "BUTTON") {
+          _this2.page.append(_this2.slides[0]);
+
+          _this2.decorizeSlides();
+        } else {
+          _this2.page.append(_this2.slides[0]);
+
+          _this2.decorizeSlides();
+        }
       });
       this.prev.addEventListener("click", function () {
         _this2.page.prepend(_this2.slides[_this2.slides.length - 1]);

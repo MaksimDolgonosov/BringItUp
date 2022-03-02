@@ -24,8 +24,18 @@ export default class MiniSlaider extends Slider {
 
     bindTriggers() {
         this.next.addEventListener("click", () => {
-            this.page.append(this.slides[0]);
-            this.decorizeSlides();
+            if (this.slides[1].tagName == "BUTTON" && this.slides[2].tagName == "BUTTON") {
+                this.page.append(this.slides[0]);
+                this.page.append(this.slides[0]);
+                this.decorizeSlides();
+            } else if (this.slides[1].tagName == "BUTTON"){
+                this.page.append(this.slides[0]);
+                this.decorizeSlides();
+            } else {
+                this.page.append(this.slides[0]);
+                this.decorizeSlides();
+            }
+           
         });
 
 
