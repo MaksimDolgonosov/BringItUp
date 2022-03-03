@@ -67,9 +67,9 @@ export default class MiniSlaider extends Slider {
 
 
         if (this.autoplay == true) {
-            let intervalPlay = setInterval(() => this.nextSlide(), 1000);
+            let intervalPlay = setInterval(() => this.nextSlide(), 5000);
             this.page.addEventListener("mouseenter", () => clearInterval(intervalPlay));
-            this.page.addEventListener("mouseleave", () => intervalPlay = setInterval(() => this.nextSlide(), 1000));
+            this.page.addEventListener("mouseleave", () => intervalPlay = setInterval(() => this.nextSlide(), 5000));
         }
     }
 }

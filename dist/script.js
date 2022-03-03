@@ -3110,14 +3110,14 @@ function (_Slider) {
       if (this.autoplay == true) {
         var intervalPlay = setInterval(function () {
           return _this3.nextSlide();
-        }, 1000);
+        }, 5000);
         this.page.addEventListener("mouseenter", function () {
           return clearInterval(intervalPlay);
         });
         this.page.addEventListener("mouseleave", function () {
           return intervalPlay = setInterval(function () {
             return _this3.nextSlide();
-          }, 1000);
+          }, 5000);
         });
       }
     }
