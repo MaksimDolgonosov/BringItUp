@@ -2845,7 +2845,8 @@ window.addEventListener("DOMContentLoaded", function () {
     next: ".modules__info-btns .slick-next",
     prev: ".modules__info-btns .slick-prev",
     activeClass: "card-active",
-    animate: true
+    animate: true,
+    autoplay: true
   });
   modulesSlider.render();
   var feedSlider = new _modules_slider_slider_mini__WEBPACK_IMPORTED_MODULE_2__["default"]({
@@ -3059,28 +3060,39 @@ function (_Slider) {
       }
     }
   }, {
+    key: "nextSlide",
+    value: function nextSlide() {
+      if (this.slides[1].tagName == "BUTTON" && this.slides[2].tagName == "BUTTON") {
+        this.page.append(this.slides[0]);
+        this.page.append(this.slides[0]);
+        this.decorizeSlides();
+      }
+
+      if (this.slides[1].tagName == "BUTTON") {
+        this.page.append(this.slides[0]);
+        this.decorizeSlides();
+      }
+
+      this.page.append(this.slides[0]);
+      this.decorizeSlides();
+    }
+  }, {
     key: "bindTriggers",
     value: function bindTriggers() {
       var _this2 = this;
 
       this.next.addEventListener("click", function () {
-        if (_this2.slides[1].tagName == "BUTTON" && _this2.slides[2].tagName == "BUTTON") {
-          _this2.page.append(_this2.slides[0]);
+        return _this2.nextSlide();
+      });
+      this.prev.addEventListener("click", function () {
+        if (_this2.slides[_this2.slides.length - 1].tagName == "BUTTON" && _this2.slides[_this2.slides.length - 2].tagName == "BUTTON") {
+          _this2.page.prepend(_this2.slides[_this2.slides.length - 1]);
 
-          _this2.page.append(_this2.slides[0]);
-
-          _this2.decorizeSlides();
-        } else if (_this2.slides[1].tagName == "BUTTON") {
-          _this2.page.append(_this2.slides[0]);
-
-          _this2.decorizeSlides();
-        } else {
-          _this2.page.append(_this2.slides[0]);
+          _this2.page.prepend(_this2.slides[_this2.slides.length - 1]);
 
           _this2.decorizeSlides();
         }
-      });
-      this.prev.addEventListener("click", function () {
+
         _this2.page.prepend(_this2.slides[_this2.slides.length - 1]);
 
         _this2.decorizeSlides();
@@ -3089,9 +3101,25 @@ function (_Slider) {
   }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       this.page.style.cssText = "\n        display: flex;\n        flex-wrap: wrap;\n        overflow: hidden;\n        align-items: flex-start;";
       this.bindTriggers();
       this.decorizeSlides();
+
+      if (this.autoplay == true) {
+        var intervalPlay = setInterval(function () {
+          return _this3.nextSlide();
+        }, 1000);
+        this.page.addEventListener("mouseenter", function () {
+          return clearInterval(intervalPlay);
+        });
+        this.page.addEventListener("mouseleave", function () {
+          return intervalPlay = setInterval(function () {
+            return _this3.nextSlide();
+          }, 1000);
+        });
+      }
     }
   }]);
 

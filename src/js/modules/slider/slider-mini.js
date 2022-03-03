@@ -22,32 +22,40 @@ export default class MiniSlaider extends Slider {
         }
     }
 
-    bindTriggers() {
-        this.next.addEventListener("click", () => {
-            if (this.slides[1].tagName == "BUTTON" && this.slides[2].tagName == "BUTTON") {
-                this.page.append(this.slides[0]);
-                this.page.append(this.slides[0]);
-                this.decorizeSlides();
-            } else if (this.slides[1].tagName == "BUTTON"){
-                this.page.append(this.slides[0]);
-                this.decorizeSlides();
-            } else {
-                this.page.append(this.slides[0]);
-                this.decorizeSlides();
-            }
-           
-        });
 
+
+    nextSlide() {
+        if (this.slides[1].tagName == "BUTTON" && this.slides[2].tagName == "BUTTON") {
+            this.page.append(this.slides[0]);
+            this.page.append(this.slides[0]);
+            this.decorizeSlides();
+        }
+        if (this.slides[1].tagName == "BUTTON") {
+            this.page.append(this.slides[0]);
+            this.decorizeSlides();
+        }
+        this.page.append(this.slides[0]);
+        this.decorizeSlides();
+    }
+
+    bindTriggers() {
+        this.next.addEventListener("click", () => this.nextSlide());
 
         this.prev.addEventListener("click", () => {
+
+            if (this.slides[this.slides.length - 1].tagName == "BUTTON" && this.slides[this.slides.length - 2].tagName == "BUTTON") {
+                this.page.prepend(this.slides[this.slides.length - 1]);
+                this.page.prepend(this.slides[this.slides.length - 1]);
+                this.decorizeSlides();
+            }
             this.page.prepend(this.slides[this.slides.length - 1]);
             this.decorizeSlides();
         });
     }
 
 
-    render() {
 
+    render() {
         this.page.style.cssText = `
         display: flex;
         flex-wrap: wrap;
@@ -57,5 +65,11 @@ export default class MiniSlaider extends Slider {
         this.bindTriggers();
         this.decorizeSlides();
 
+
+        if (this.autoplay == true) {
+            let intervalPlay = setInterval(() => this.nextSlide(), 1000);
+            this.page.addEventListener("mouseenter", () => clearInterval(intervalPlay));
+            this.page.addEventListener("mouseleave", () => intervalPlay = setInterval(() => this.nextSlide(), 1000));
+        }
     }
 }
