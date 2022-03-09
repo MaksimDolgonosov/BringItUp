@@ -5213,8 +5213,7 @@ function () {
     this.success = "Successfully sent";
     this.failure = "Fail! Please, reload the WEB page";
     this.inputs = document.querySelectorAll("input");
-    this.emailInputs = document.querySelectorAll("[name=email]");
-    this.pnoneNumber = document.querySelector("[name='phone']");
+    this.emailInputs = document.querySelectorAll("[name=email]"); // this.pnoneNumber = document.querySelector("[name='phone']");
   }
 
   _createClass(Form, [{
@@ -5254,54 +5253,58 @@ function () {
       });
     }
   }, {
-    key: "createMask",
-    value: function createMask(event) {
-      var matrix = "+1 (___) ___-____";
-      var i = 0;
-      var def = matrix.replace(/\D/g, ""); // вместо не чисел, пустые строки (матрица)
+    key: "initMask",
+    value: function initMask() {
+      var setCursorPosition = function setCursorPosition(pos, elem) {
+        elem.focus();
 
-      var val = this.value.replace(/\D/g, ""); // вместо не чисел, пустые строки (то что ввёл пользователь)
+        if (elem.setSelectionRange) {
+          elem.setSelectionRange(pos, pos);
+        } else if (elem.createTextRange) {
+          var range = elem.createTextRange();
+          range.collapse(true);
+          range.moveEnd("character", pos);
+          range.moveStart("character", pos);
+          range.select();
+        }
+      };
 
-      if (def.length >= val.length) {
-        val = def; // пользователь не мог удалить 7 из matrix
-      }
+      function createMask(event) {
+        var matrix = "+1 (___) ___-____";
+        var i = 0;
+        var def = matrix.replace(/\D/g, ""); // вместо не чисел, пустые строки (матрица)
 
-      this.value = matrix.replace(/./g, function (a) {
-        if (/[_\d]/.test(a) && i < val.length) {
-          return val.charAt(i++);
-        } else if (i >= val.length) {
-          return "";
+        var val = this.value.replace(/\D/g, ""); // вместо не чисел, пустые строки (то что ввёл пользователь)
+
+        if (def.length >= val.length) {
+          val = def; // пользователь не мог удалить 7 из matrix
+        }
+
+        this.value = matrix.replace(/./g, function (a) {
+          if (/[_\d]/.test(a) && i < val.length) {
+            return val.charAt(i++);
+          } else if (i >= val.length) {
+            return "";
+          } else {
+            return a;
+          }
+        });
+
+        if (event.type == "blur") {
+          if (this.value.length == 2) {
+            this.value = "";
+          }
         } else {
-          return a;
+          setCursorPosition(this.value.length, this);
         }
+      }
+
+      var inputs = document.querySelectorAll("[name='phone']");
+      inputs.forEach(function (input) {
+        input.addEventListener("input", createMask);
+        input.addEventListener("focus", createMask);
+        input.addEventListener("blur", createMask);
       });
-
-      if (event.type == "blur") {
-        if (this.value.length == 2) {
-          this.value = "";
-        }
-      } else {
-        this.setCursorPosition(this.value.length, this);
-      }
-
-      this.pnoneNumber.addEventListener("input", this.createMask);
-      this.pnoneNumber.addEventListener("focus", this.createMask);
-      this.pnoneNumber.addEventListener("blur", this.createMask);
-    }
-  }, {
-    key: "setCursorPosition",
-    value: function setCursorPosition(pos, elem) {
-      elem.focus();
-
-      if (elem.setSelectionRange) {
-        elem.setSelectionRange(pos, pos);
-      } else if (elem.createTextRange) {
-        var range = elem.createTextRange();
-        range.collapse(true);
-        range.moveEnd("character", pos);
-        range.moveStart("character", pos);
-        range.select();
-      }
     }
   }, {
     key: "controlEmailInputs",
@@ -5379,7 +5382,7 @@ function () {
         _this2.bindPostData(e);
       });
       this.controlEmailInputs();
-      this.createMask();
+      this.initMask();
     }
   }]);
 
