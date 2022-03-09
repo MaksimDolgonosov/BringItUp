@@ -1,7 +1,8 @@
 import Slider from "./slider";
 export default class MainSlider extends Slider {
-    constructor(page, btns) {
-        super(page, btns);
+    constructor(page, btns, nextModule, prevModule) {
+        super(page, btns, nextModule, prevModule);
+
 
     }
     showSlide(n) {
@@ -34,11 +35,7 @@ export default class MainSlider extends Slider {
         this.showSlide(this.slideIndex += n);
     }
 
-    render() {
-        try {
-            this.visitCard = document.querySelector(".hanson");
-        } catch (e) { }
-
+    bindTriggers() {
 
         this.btns.forEach(btn => {
             btn.addEventListener("click", () => {
@@ -50,11 +47,27 @@ export default class MainSlider extends Slider {
                 this.slideIndex = 1;
                 this.showSlide(this.slideIndex);
             });
-
-
-
         });
-        this.showSlide(this.slideIndex);
+        this.nextModule.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation(); // отменяет все остальные события, навешанные на данную кнопку (срабатывает только действующее СОБЫТИЕ
+                this.plusSlides(1);
+            });
+        });
+        this.prevModule.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                this.plusSlides(-1);
+            });
+        });
+    }
 
+    render() {
+        if (this.page) {
+            try {
+                this.visitCard = document.querySelector(".hanson");
+            } catch (e) { }
+            this.showSlide(this.slideIndex);
+            this.bindTriggers();
+        }
     }
 }

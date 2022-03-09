@@ -56,20 +56,22 @@ export default class MiniSlaider extends Slider {
 
 
     render() {
-        this.page.style.cssText = `
+        try {
+            this.page.style.cssText = `
         display: flex;
         flex-wrap: wrap;
         overflow: hidden;
         align-items: flex-start;`;
 
-        this.bindTriggers();
-        this.decorizeSlides();
+            this.bindTriggers();
+            this.decorizeSlides();
 
 
-        if (this.autoplay == true) {
-            let intervalPlay = setInterval(() => this.nextSlide(), 5000);
-            this.page.addEventListener("mouseenter", () => clearInterval(intervalPlay));
-            this.page.addEventListener("mouseleave", () => intervalPlay = setInterval(() => this.nextSlide(), 5000));
-        }
+            if (this.autoplay == true) {
+                let intervalPlay = setInterval(() => this.nextSlide(), 5000);
+                this.page.addEventListener("mouseenter", () => clearInterval(intervalPlay));
+                this.page.addEventListener("mouseleave", () => intervalPlay = setInterval(() => this.nextSlide(), 5000));
+            }
+        } catch (e) { }
     }
 }

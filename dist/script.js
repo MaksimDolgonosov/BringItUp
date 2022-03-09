@@ -5051,6 +5051,13 @@ window.addEventListener("DOMContentLoaded", function () {
     page: ".page"
   });
   slider.render();
+  var moduleSlider = new _modules_slider_sliderMain__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    page: ".moduleapp",
+    btns: ".next",
+    nextModule: ".nextmodule",
+    prevModule: ".prevmodule"
+  });
+  moduleSlider.render();
   var showUpSlider = new _modules_slider_slider_mini__WEBPACK_IMPORTED_MODULE_2__["default"]({
     page: ".showup__content-slider",
     next: ".showup__next",
@@ -5145,9 +5152,11 @@ function () {
   }, {
     key: "render",
     value: function render() {
-      this.hideItems();
-      this.bindTriggers(this.oldOfficer, this.items, this.oldCounter);
-      this.bindTriggers(this.newOfficer, this.items, this.newCounter);
+      try {
+        this.hideItems();
+        this.bindTriggers(this.oldOfficer, this.items, this.oldCounter);
+        this.bindTriggers(this.newOfficer, this.items, this.newCounter);
+      } catch (e) {}
     }
   }]);
 
@@ -5634,23 +5643,25 @@ function (_Slider) {
     value: function render() {
       var _this3 = this;
 
-      this.page.style.cssText = "\n        display: flex;\n        flex-wrap: wrap;\n        overflow: hidden;\n        align-items: flex-start;";
-      this.bindTriggers();
-      this.decorizeSlides();
+      try {
+        this.page.style.cssText = "\n        display: flex;\n        flex-wrap: wrap;\n        overflow: hidden;\n        align-items: flex-start;";
+        this.bindTriggers();
+        this.decorizeSlides();
 
-      if (this.autoplay == true) {
-        var intervalPlay = setInterval(function () {
-          return _this3.nextSlide();
-        }, 5000);
-        this.page.addEventListener("mouseenter", function () {
-          return clearInterval(intervalPlay);
-        });
-        this.page.addEventListener("mouseleave", function () {
-          return intervalPlay = setInterval(function () {
+        if (this.autoplay == true) {
+          var intervalPlay = setInterval(function () {
             return _this3.nextSlide();
           }, 5000);
-        });
-      }
+          this.page.addEventListener("mouseenter", function () {
+            return clearInterval(intervalPlay);
+          });
+          this.page.addEventListener("mouseleave", function () {
+            return intervalPlay = setInterval(function () {
+              return _this3.nextSlide();
+            }, 5000);
+          });
+        }
+      } catch (e) {}
     }
   }]);
 
@@ -5683,6 +5694,10 @@ var Slider = function Slider() {
       next = _ref$next === void 0 ? null : _ref$next,
       _ref$prev = _ref.prev,
       prev = _ref$prev === void 0 ? null : _ref$prev,
+      _ref$nextModule = _ref.nextModule,
+      nextModule = _ref$nextModule === void 0 ? null : _ref$nextModule,
+      _ref$prevModule = _ref.prevModule,
+      prevModule = _ref$prevModule === void 0 ? null : _ref$prevModule,
       _ref$activeClass = _ref.activeClass,
       activeClass = _ref$activeClass === void 0 ? "" : _ref$activeClass,
       animate = _ref.animate,
@@ -5691,10 +5706,17 @@ var Slider = function Slider() {
   _classCallCheck(this, Slider);
 
   this.page = document.querySelector(page);
-  this.slides = this.page.children;
+
+  try {
+    this.slides = this.page.children;
+  } catch (e) {}
+
+  ;
   this.btns = document.querySelectorAll(btns);
   this.next = document.querySelector(next);
   this.prev = document.querySelector(prev);
+  this.nextModule = document.querySelectorAll(nextModule);
+  this.prevModule = document.querySelectorAll(prevModule);
   this.activeClass = activeClass;
   this.animate = animate;
   this.autoplay = autoplay;
@@ -5778,10 +5800,10 @@ var MainSlider =
 function (_Slider) {
   _inherits(MainSlider, _Slider);
 
-  function MainSlider(page, btns) {
+  function MainSlider(page, btns, nextModule, prevModule) {
     _classCallCheck(this, MainSlider);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MainSlider).call(this, page, btns));
+    return _possibleConstructorReturn(this, _getPrototypeOf(MainSlider).call(this, page, btns, nextModule, prevModule));
   }
 
   _createClass(MainSlider, [{
@@ -5823,13 +5845,9 @@ function (_Slider) {
       this.showSlide(this.slideIndex += n);
     }
   }, {
-    key: "render",
-    value: function render() {
+    key: "bindTriggers",
+    value: function bindTriggers() {
       var _this2 = this;
-
-      try {
-        this.visitCard = document.querySelector(".hanson");
-      } catch (e) {}
 
       this.btns.forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -5842,7 +5860,30 @@ function (_Slider) {
           _this2.showSlide(_this2.slideIndex);
         });
       });
-      this.showSlide(this.slideIndex);
+      this.nextModule.forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation(); // отменяет все остальные события, навешанные на данную кнопку (срабатывает только действующее СОБЫТИЕ
+
+          _this2.plusSlides(1);
+        });
+      });
+      this.prevModule.forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          _this2.plusSlides(-1);
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      if (this.page) {
+        try {
+          this.visitCard = document.querySelector(".hanson");
+        } catch (e) {}
+
+        this.showSlide(this.slideIndex);
+        this.bindTriggers();
+      }
     }
   }]);
 

@@ -29,8 +29,10 @@ export default class Difference {
     }
 
     render() {
-        this.hideItems();
-        this.bindTriggers(this.oldOfficer, this.items, this.oldCounter);
-        this.bindTriggers(this.newOfficer, this.items, this.newCounter);
+        try {
+            this.hideItems();
+            this.bindTriggers(this.oldOfficer, this.items, this.oldCounter);
+            this.bindTriggers(this.newOfficer, this.items, this.newCounter);
+        } catch (e) { }
     }
 }
