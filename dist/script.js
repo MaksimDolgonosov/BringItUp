@@ -5082,8 +5082,9 @@ window.addEventListener("DOMContentLoaded", function () {
     activeClass: "feed__item-active"
   });
   feedSlider.render();
-  var player1 = new _modules_playVideo__WEBPACK_IMPORTED_MODULE_1__["default"](".showup .play", ".overlay");
-  player1.init();
+  new _modules_playVideo__WEBPACK_IMPORTED_MODULE_1__["default"](".showup .play", ".overlay").init();
+  new _modules_playVideo__WEBPACK_IMPORTED_MODULE_1__["default"](".module__video-item .play", ".overlay").init(); //new VideoPlayer(".module__video-item_3 .play", ".overlay").init();
+
   var officer = new _modules_difference__WEBPACK_IMPORTED_MODULE_3__["default"](".officerold", ".officernew", ".officer__card-item");
   officer.render();
   new _modules_forms__WEBPACK_IMPORTED_MODULE_4__["default"](".form").render();
@@ -5448,11 +5449,19 @@ function () {
         btn.addEventListener("click", function () {
           if (document.querySelector("iframe#frame")) {
             _this.overlay.style.display = "flex";
+
+            if (_this.path !== btn.getAttribute("data-url")) {
+              _this.path = btn.getAttribute("data-url");
+
+              _this.player.loadVideoById({
+                videoId: _this.path
+              });
+            }
           } else {
             _this.overlay.style.display = "flex";
-            var path = btn.getAttribute("data-url");
+            _this.path = btn.getAttribute("data-url");
 
-            _this.createPlayer(path);
+            _this.createPlayer(_this.path);
           }
         });
       });
@@ -5475,19 +5484,20 @@ function () {
         height: '100%',
         width: '100%',
         videoId: "".concat(url)
-      });
-      console.log(this.player);
+      }); //console.log(this.player);
     }
   }, {
     key: "init",
     value: function init() {
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); // создание и подключение ассинхронного скрипта в начало страницы
+      if (this.btns.length > 0) {
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); // создание и подключение ассинхронного скрипта в начало страницы
 
-      this.bindTriggers();
-      this.bindCloseBtn();
+        this.bindTriggers();
+        this.bindCloseBtn();
+      }
     }
   }]);
 

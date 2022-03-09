@@ -11,10 +11,14 @@ export default class VideoPlayer {
             btn.addEventListener("click", () => {
                 if (document.querySelector("iframe#frame")) {
                     this.overlay.style.display = "flex";
+                    if (this.path !== btn.getAttribute("data-url")) {
+                        this.path = btn.getAttribute("data-url");
+                        this.player.loadVideoById({ videoId: this.path });
+                    }
                 } else {
                     this.overlay.style.display = "flex";
-                    const path = btn.getAttribute("data-url");
-                    this.createPlayer(path);
+                    this.path = btn.getAttribute("data-url");
+                    this.createPlayer(this.path);
                 }
             });
         });
@@ -34,16 +38,18 @@ export default class VideoPlayer {
             width: '100%',
             videoId: `${url}`
         });
-        console.log(this.player);
+        //console.log(this.player);
     }
 
     init() {
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); // создание и подключение ассинхронного скрипта в начало страницы
-        this.bindTriggers();
-        this.bindCloseBtn();
+        if (this.btns.length > 0) {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); // создание и подключение ассинхронного скрипта в начало страницы
+            this.bindTriggers();
+            this.bindCloseBtn();
+        }
 
     }
 }
