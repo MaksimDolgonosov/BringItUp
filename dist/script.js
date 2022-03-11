@@ -5359,7 +5359,9 @@ function () {
       var _this = this;
 
       this.downloadBtn.forEach(function (btn) {
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+
           _this.downloadPic(_this.link);
         });
       });
