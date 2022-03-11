@@ -3,6 +3,8 @@ import VideoPlayer from "./modules/playVideo";
 import MiniSlider from "./modules/slider/slider-mini";
 import Difference from "./modules/difference";
 import Form from "./modules/forms";
+import ShowInformation from "./modules/showInfo";
+import Download from "./modules/download";
 window.addEventListener("DOMContentLoaded", () => {
     const slider = new MainSlider({ btns: ".next", page: ".page" });
     slider.render();
@@ -45,5 +47,6 @@ window.addEventListener("DOMContentLoaded", () => {
     officer.render();
 
     new Form(".form").render();
-
+    new ShowInformation(".plus__content", ".msg").init();
+    new Download(".download").init();
 });
