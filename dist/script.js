@@ -5512,14 +5512,16 @@ function () {
       var _this = this;
 
       this.btns.forEach(function (btn, i) {
-        var blockedItem = btn.closest(".module__video-item").nextElementSibling;
+        try {
+          var blockedItem = btn.closest(".module__video-item").nextElementSibling;
 
-        if (i % 2 == 0) {
-          blockedItem.setAttribute("data-blocked", true);
-        }
+          if (i % 2 == 0) {
+            blockedItem.setAttribute("data-blocked", 'true');
+          }
+        } catch (e) {}
 
         btn.addEventListener("click", function () {
-          if (btn.closest(".module__video-item").getAttribute("data-blocked") !== true) {
+          if (!btn.closest(".module__video-item") || btn.closest(".module__video-item").getAttribute("data-blocked") !== 'true') {
             _this.activeBtn = btn;
 
             if (document.querySelector("iframe#frame")) {
@@ -5584,27 +5586,30 @@ function () {
   }, {
     key: "onPlayerStateChange",
     value: function onPlayerStateChange(state) {
-      var blockedItem = this.activeBtn.closest(".module__video-item").nextElementSibling;
-      var playBtn = this.activeBtn.querySelector("svg").cloneNode(true);
+      try {
+        var blockedItem = this.activeBtn.closest(".module__video-item").nextElementSibling;
+        var playBtn = this.activeBtn.querySelector("svg").cloneNode(true);
 
-      if (state.data == 0) {
-        if (blockedItem.querySelector(".play__circle").classList.contains("closed")) {
-          blockedItem.querySelector(".play__circle").classList.remove("closed");
-          blockedItem.querySelector("svg").remove();
-          blockedItem.querySelector(".play__circle").append(playBtn);
-          blockedItem.querySelector(".play__text").textContent = "play video";
-          blockedItem.querySelector(".play__text").classList.remove("attention");
-          blockedItem.style.opacity = 1;
-          blockedItem.style.filter = "none";
+        if (state.data == 0) {
+          if (blockedItem.querySelector(".play__circle").classList.contains("closed")) {
+            blockedItem.querySelector(".play__circle").classList.remove("closed");
+            blockedItem.querySelector("svg").remove();
+            blockedItem.querySelector(".play__circle").append(playBtn);
+            blockedItem.querySelector(".play__text").textContent = "play video";
+            blockedItem.querySelector(".play__text").classList.remove("attention");
+            blockedItem.style.opacity = 1;
+            blockedItem.style.filter = "none";
+            blockedItem.setAttribute("data-blocked", "false");
+          }
         }
-      }
+      } catch (e) {}
     }
   }, {
     key: "init",
     value: function init() {
       if (this.btns.length > 0) {
         var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
+        tag.src = "http://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); // создание и подключение ассинхронного скрипта в начало страницы
 
